@@ -1,0 +1,46 @@
+package edu.escuelaing.techcup.shared.audit;
+
+/** Every auditable action of the platform (specification sections 7.1 to 7.5). */
+public enum AuditAction {
+    // identity
+    USER_REGISTERED,
+    LOGIN,
+    LOGOUT,
+    ROLE_ASSIGNED,
+    ROLE_REMOVED,
+    REFEREE_CREATED,
+    USER_INACTIVATED,
+    // players
+    USER_UPDATED,
+    PROFILE_CREATED,
+    PROFILE_UPDATED,
+    JOIN_REQUEST_CREATED,
+    JOIN_REQUEST_CANCELLED,
+    JOIN_REQUEST_ACCEPTED,
+    JOIN_REQUEST_REJECTED,
+    // teams
+    TEAM_CREATED,
+    TEAM_UPDATED,
+    TEAM_MEMBER_REMOVED,
+    TEAM_INACTIVATED,
+    // tournaments (phase 2)
+    TOURNAMENT_CREATED,
+    TOURNAMENT_UPDATED,
+    TOURNAMENT_DELETED,
+    TOURNAMENT_ACTIVATED,
+    TOURNAMENT_STARTED,
+    TOURNAMENT_FINISHED,
+    RULEBOOK_UPLOADED,
+    VENUE_CREATED,
+    VENUE_DELETED,
+    REGISTRATION_CREATED,
+    REGISTRATION_APPROVED,
+    REGISTRATION_REJECTED,
+    REGISTRATION_CANCELLED,
+    // competition (phase 2)
+    MATCHES_GENERATED,
+    MATCH_UPDATED,
+    MATCH_CANCELLED,
+    MATCH_RESULT_RECORDED,
+    LINEUP_SAVED
+}

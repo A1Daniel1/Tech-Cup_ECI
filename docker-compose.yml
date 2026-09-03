@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: techcup-postgres
+    environment:
+      POSTGRES_DB: techcup
+      POSTGRES_USER: techcup
+      POSTGRES_PASSWORD: techcup
+    # Host port 5433 on purpose: many machines already run a native PostgreSQL on
+    # 5432, which would silently win the connection and fail authentication.
+    ports:
+      - "5433:5432"
+    volumes:
+      - techcup_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U techcup -d techcup"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mongo:
+    image: mongo:7
+    container_name: techcup-mongo
+    # Host port 27018 for the same reason as PostgreSQL above.
+    ports:
+      - "27018:27017"
+    volumes:
+      - techcup_mongodata:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  techcup_pgdata:
+  techcup_mongodata:

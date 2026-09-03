@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: techcup
+
+  datasource:
+    # 127.0.0.1 (not localhost) and 5433 to avoid a native PostgreSQL on 5432.
+    url: ${DB_URL:jdbc:postgresql://127.0.0.1:5433/techcup}
+    username: ${DB_USER:techcup}
+    password: ${DB_PASSWORD:techcup}
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Flyway owns the schema; Hibernate only checks that entities match it.
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_batch_fetch_size: 32
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://127.0.0.1:27018/techcup}
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+  jackson:
+    # Nullable fields are serialized as explicit nulls (not omitted) so responses
+    # match the documented DTO shapes and clients can rely on the key being there.
+    default-property-inclusion: always
+
+server:
+  port: ${PORT:8080}
+  error:
+    include-stacktrace: never
+
+app:
+  jwt:
+    # Must be at least 32 bytes for HS256. Override in every non-dev environment.
+    secret: ${JWT_SECRET:techcup-dev-only-secret-change-me-please-0123456789abcdef}
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:480}
+  cors-origins: ${CORS_ORIGINS:http://localhost:5173}
+  institutional-domains: ${APP_INSTITUTIONAL_DOMAINS:escuelaing.edu.co,mail.escuelaing.edu.co}
+  storage:
+    max-file-size-bytes: 5242880
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    edu.escuelaing.techcup: INFO

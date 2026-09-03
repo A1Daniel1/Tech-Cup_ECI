@@ -1,0 +1,19 @@
+import { api } from '@/lib/api'
+import type { AuditLogResponse, CreateRefereeRequest, Role, UserResponse } from '@/types/api'
+
+export const adminApi = {
+  searchUsers: (search: string, signal?: AbortSignal) =>
+    api.get<UserResponse[]>('/admin/users', { search: search || undefined }, signal),
+  getUserRoles: (userId: number, signal?: AbortSignal) => api.get<Role[]>(`/admin/users/${userId}/roles`, undefined, signal),
+  assignRole: (userId: number, role: Role) => api.post<Role[]>(`/admin/users/${userId}/roles`, { role }),
+  removeRole: (userId: number, role: Role) => api.delete<Role[]>(`/admin/users/${userId}/roles/${role}`),
+  inactivateUser: (userId: number) => api.post<UserResponse>(`/admin/users/${userId}/inactivate`),
+
+  grantCaptain: (userId: number) => api.post<UserResponse>(`/organizer/users/${userId}/captain`),
+  revokeCaptain: (userId: number) => api.delete<UserResponse>(`/organizer/users/${userId}/captain`),
+  createReferee: (payload: CreateRefereeRequest) => api.post<UserResponse>('/organizer/referees', payload),
+  listReferees: (signal?: AbortSignal) => api.get<UserResponse[]>('/organizer/referees', undefined, signal),
+
+  audit: (filters: { action?: string; limit?: number }, signal?: AbortSignal) =>
+    api.get<AuditLogResponse[]>('/admin/audit', { action: filters.action || undefined, limit: filters.limit }, signal),
+}

@@ -1,0 +1,28 @@
+import { api } from '@/lib/api'
+import type {
+  CancelReason,
+  LineupResponse,
+  MatchResponse,
+  MatchResultRequest,
+  SanctionedPlayer,
+  UpdateMatchRequest,
+  UpsertLineupRequest,
+} from '@/types/api'
+
+/** Competition endpoints (docs/ARCHITECTURE.md section 3.5, block COMPETITION). */
+export const competitionApi = {
+  getMatch: (id: number, signal?: AbortSignal) => api.get<MatchResponse>(`/matches/${id}`, undefined, signal),
+  updateMatch: (id: number, payload: UpdateMatchRequest) => api.patch<MatchResponse>(`/matches/${id}`, payload),
+  /** Soft cancellation: the match keeps its record with status CANCELLED. */
+  cancelMatch: (id: number, reason: CancelReason) => api.delete<MatchResponse>(`/matches/${id}`, { reason }),
+  recordResult: (id: number, payload: MatchResultRequest) => api.post<MatchResponse>(`/matches/${id}/result`, payload),
+
+  upsertLineup: (matchId: number, payload: UpsertLineupRequest) =>
+    api.put<LineupResponse>(`/matches/${matchId}/lineups`, payload),
+  getLineup: (matchId: number, teamId: number, signal?: AbortSignal) =>
+    api.get<LineupResponse>(`/matches/${matchId}/lineups/${teamId}`, undefined, signal),
+
+  refereeMatches: (signal?: AbortSignal) => api.get<MatchResponse[]>('/referees/me/matches', undefined, signal),
+  sanctionedPlayers: (matchId: number, signal?: AbortSignal) =>
+    api.get<SanctionedPlayer[]>(`/matches/${matchId}/sanctioned-players`, undefined, signal),
+}
